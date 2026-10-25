@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer"><meta name="robots" content="noindex">
+<title>Bankkoppeling: code</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;max-width:36rem;margin:3rem auto;padding:0 1rem}code{display:block;word-break:break-all;background:#f3f3f3;padding:.75rem;border-radius:6px}button{margin-top:.5rem;padding:.5rem 1rem}</style>
+</head><body>
+<h1>Bankkoppeling</h1>
+<p id="msg">Geen code gevonden in deze link.</p>
+<code id="cmd" hidden></code>
+<button id="copy" hidden>Kopieer</button>
+<p><small>Deze pagina stuurt niets door: de code blijft in je browser. Plak hem in de chat met de finance-bot.</small></p>
+<script>
+const q = new URLSearchParams(location.search);
+const msg = document.getElementById('msg'), cmd = document.getElementById('cmd'), btn = document.getElementById('copy');
+if (q.get('error')) {
+  msg.textContent = 'De bank gaf een fout: ' + q.get('error') + ' ' + (q.get('error_description') || '');
+} else if (q.get('code')) {
+  msg.textContent = 'Gelukt. Kopieer deze regel en stuur hem naar de finance-bot:';
+  cmd.textContent = 'python3 -m scripts.consent finish "' + location.href + '"';
+  cmd.hidden = btn.hidden = false;
+  btn.onclick = () => navigator.clipboard.writeText(cmd.textContent).then(() => btn.textContent = 'Gekopieerd');
+}
+</script>
+</body></html>
